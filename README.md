@@ -1,0 +1,9 @@
+**Scenario:** the city has a limited Emergency Housing Stabilization Fund. This scoring model predicts which applicants are at highest risk of housing loss or homelessness within the next 60 days, and therefore should receive the highest priority for rental arrears support, eviction-prevention services, or emergency shelter placement. Because resources are scarce, the city can fund only a fixed number of applicants in the current round; everyone else is waitlisted, even if their need is substantial.
+
+**Data:** This application uses a data set of fictional applicant profiles and an editable model for prioritizing applicants to a city Emergency Housing Stabilization Fund.					
+							
+**Decision being modeled:** The model assigns a priority level for emergency housing stabilization assistance. Students should read the profiles as applicants who are seeking funding through a city-run housing program because they are at risk of housing loss or homelessness within the next 60 days. Due to budget constraints, only five applicants can be selected to receive the benefit in this funding round; the rest are waitlisted.					
+							
+**Exercise:**	1) Distribute profile cards and tell each group that the city can fund only five applicants in this round. Ask them to decide which applicants should receive immediate assistance and which should be waitlisted. 2) Open the Model_and_Scoring sheet and compare those judgments to the rule-based model. 3) Edit the yellow weight and threshold cells at the top of that sheet—including the number of funded slots—to simulate an 'algorithmic fix' and watch rankings, classifications, and funding recommendations change.					
+							
+**Teaching goal:** The scoring model is intentionally reductive and flawed. It illustrates how formalized prediction diverges from human-led decision-making, how "poverty management" is systematized as a zero-sum game, and how biases are implicit in category design and proxy variables.
