@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prediction Game — Emergency Housing Stabilization Fund</title>
+  <title>Emergency Housing Stabilization Fund — Prediction Model</title>
   <style>
     :root {
       --bg: #f5f7fb;
@@ -207,13 +207,15 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>Prediction Game: Emergency Housing Stabilization Fund</h1>
+    <h1>Emergency Housing Stabilization Fund — Prediction Model</h1>
     <p class="lede">Scenario: the city has a limited Emergency Housing Stabilization Fund. This scoring model predicts which applicants are at highest risk of housing loss or homelessness within the next 60 days, and therefore should receive the highest priority for rental arrears support, eviction-prevention services, or emergency shelter placement. Because resources are scarce, the city can fund only a fixed number of applicants in the current round; everyone else is waitlisted, even if their need is substantial.</p>
 
     <div class="grid">
       <div class="panel sticky">
         <h2>Model controls</h2>
-        <p class="small">Assign weights below. Until every weighted category has a value, applicants remain in their original order and model outputs stay blank. This is a deliberately simplified model for classroom use.</p>
+        <p class="small">Assign weights to each risk category below. Until every weighted category has a value, applicants remain in their original order and model outputs stay blank. Increasing the value of a category gives it more weight in the model's scoring of each applicants' level of risk. Zero is neutral. Negative values can be assigned to offset positive values in other risk categories.
+
+</p>
 
         <div class="controls-group">
           <h3>Scarcity settings</h3>
@@ -260,7 +262,7 @@
           <button id="downloadBtn">Download current settings</button>
         </div>
 
-        <div class="note">• What happened when high need was translated into ranking under scarcity? Did the model naturalize the idea that some people must lose out? • Did changing the weights solve the problem, or only change who got moved up or down the assistance queue once only a few applicants could be funded?</div>
+        <div class="note">This model is for educational use only.</div>
       </div>
 
       <div class="panel">
@@ -283,7 +285,7 @@
           </table>
         </div>
         <p class="footer">
-          Until the model is fully specified, applicants stay in original applicant order. Once scores are generated, ties are broken by original applicant order. That rule is arbitrary by design.
+          Until the model is fully specified, applicants stay in original applicant order. Once scores are generated, ties are broken by original applicant order.
         </p>
       </div>
     </div>
