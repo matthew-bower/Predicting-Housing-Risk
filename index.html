@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prediction Game — Emergency Housing Stabilization Fund</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --border: #d6dce8;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --accent: #1d4ed8;
+      --accent-soft: #dbeafe;
+      --warn: #92400e;
+      --warn-soft: #fef3c7;
+      --funded: #ecfdf5;
+      --waitlist: #fff7ed;
+      --high: #fee2e2;
+      --medium: #fef3c7;
+      --low: #e0f2fe;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.4;
+    }
+    .wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1,h2,h3 { margin: 0 0 12px 0; }
+    p { margin: 0 0 12px 0; }
+    .lede {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 1100px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      align-items: start;
+      margin-top: 20px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    }
+    .sticky { position: sticky; top: 16px; }
+    .controls-group {
+      margin-bottom: 18px;
+      border-top: 1px solid #eef2f7;
+      padding-top: 14px;
+    }
+    .controls-group:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+    .control-row {
+      display: grid;
+      grid-template-columns: 1fr 76px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    label {
+      font-size: 0.94rem;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+    button {
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .stat {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .stat .label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .stat .value {
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+    .note {
+      background: var(--warn-soft);
+      border: 1px solid #fcd34d;
+      color: var(--warn);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.93rem;
+      margin-top: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 10px 8px;
+      border-bottom: 1px solid #e9edf5;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #f8fafc;
+      z-index: 1;
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .table-wrap {
+      overflow: auto;
+      max-height: 78vh;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 0.8rem;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .pill.low { background: var(--low); color: #075985; }
+    .pill.medium { background: var(--medium); color: #92400e; }
+    .pill.high { background: var(--high); color: #991b1b; }
+    .pill.funded { background: #dcfce7; color: #166534; }
+    .pill.waitlist { background: #fed7aa; color: #9a3412; }
+    tr.funded-row { background: var(--funded); }
+    tr.waitlist-row { background: var(--waitlist); }
+    .small {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+    .breakdown {
+      min-width: 220px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .details {
+      min-width: 320px;
+    }
+    .key {
+      display: inline-block;
+      margin-right: 8px;
+      margin-bottom: 4px;
+      font-size: 0.81rem;
+      color: var(--muted);
+    }
+    .footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: 1fr; }
+      .sticky { position: static; }
+      .summary { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      .table-wrap { max-height: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Prediction Game: Emergency Housing Stabilization Fund</h1>
+    <p class="lede">Scenario: the city has a limited Emergency Housing Stabilization Fund. This scoring model predicts which applicants are at highest risk of housing loss or homelessness within the next 60 days, and therefore should receive the highest priority for rental arrears support, eviction-prevention services, or emergency shelter placement. Because resources are scarce, the city can fund only a fixed number of applicants in the current round; everyone else is waitlisted, even if their need is substantial.</p>
+
+    <div class="grid">
+      <div class="panel sticky">
+        <h2>Model controls</h2>
+        <p class="small">Adjust the weights below. Results update instantly. This is a deliberately simplified model for classroom use.</p>
+
+        <div class="controls-group">
+          <h3>Scarcity settings</h3>
+          <div class="control-row">
+            <label for="fundedSlots">Funded slots</label>
+            <input type="number" id="fundedSlots" min="1" max="12" step="1">
+          </div>
+          <div class="control-row">
+            <label for="lowMax">Low priority max score</label>
+            <input type="number" id="lowMax" min="0" max="20" step="1">
+          </div>
+          <div class="control-row">
+            <label for="mediumMax">Medium priority max score</label>
+            <input type="number" id="mediumMax" min="0" max="25" step="1">
+          </div>
+        </div>
+
+        <div class="controls-group" id="employmentControls">
+          <h3>Employment status</h3>
+        </div>
+
+        <div class="controls-group" id="housingControls">
+          <h3>Housing status</h3>
+        </div>
+
+        <div class="controls-group" id="educationControls">
+          <h3>Education</h3>
+        </div>
+
+        <div class="controls-group" id="missedControls">
+          <h3>Missed appointments</h3>
+        </div>
+
+        <div class="controls-group" id="zipControls">
+          <h3>ZIP code risk level</h3>
+        </div>
+
+        <div class="controls-group" id="evictionControls">
+          <h3>Prior eviction</h3>
+        </div>
+
+        <div class="button-row">
+          <button class="primary" id="resetBtn">Reset defaults</button>
+          <button id="downloadBtn">Download current settings</button>
+        </div>
+
+        <div class="note">• What happened when high need was translated into ranking under scarcity? Did the model naturalize the idea that some people must lose out? • Did changing the weights solve the problem, or only change who got moved up or down the assistance queue once only a few applicants could be funded?</div>
+      </div>
+
+      <div class="panel">
+        <div class="summary" id="summary"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Decision</th>
+                <th>Name</th>
+                <th>Profile details</th>
+                <th>Inputs</th>
+                <th>Score</th>
+                <th>Priority</th>
+                <th>Breakdown</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+        <p class="footer">
+          Tie-break rule: if two applicants receive the same score, the tool keeps their original applicant order. That rule is arbitrary by design.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_PROFILES = [{"id": "P01", "name": "Jordan Santiago", "age": 32, "employment": "Gig work", "housing": "Stable lease", "education": "HS diploma", "missedAppointments": 1, "zipRisk": "Medium", "priorEviction": true, "dependents": 1, "notes": "Leaseholder who fell behind after cutting work hours to care for a parent. Has an active payment plan, but it may lapse."}, {"id": "P02", "name": "Andrea Ellis", "age": 45, "employment": "Stable full-time", "housing": "Stable lease", "education": "Some college", "missedAppointments": 0, "zipRisk": "High", "priorEviction": false, "dependents": 2, "notes": "Hospital orderly with steady pay. Building owner announced a major rent increase when the current lease ends."}, {"id": "P03", "name": "Evelyn Park", "age": 68, "employment": "Part-time", "housing": "Public housing", "education": "BA or above", "missedAppointments": 1, "zipRisk": "Low", "priorEviction": false, "dependents": 0, "notes": "Missed one recertification appointment when paratransit never arrived. Lives alone and has mounting pharmacy co-pays."}, {"id": "P04", "name": "Marcus Reed", "age": 24, "employment": "Unemployed", "housing": "Doubled up / couch-surfing", "education": "Some college", "missedAppointments": 1, "zipRisk": "Medium", "priorEviction": true, "dependents": 0, "notes": "Recently finished a job-training program and is interviewing, but has no fixed mailing address."}, {"id": "P05", "name": "Priya Shah", "age": 29, "employment": "Part-time", "housing": "Stable lease", "education": "BA or above", "missedAppointments": 0, "zipRisk": "Medium", "priorEviction": false, "dependents": 0, "notes": "Retail hours were cut sharply this month, and her roommate is moving out at the end of the lease cycle."}, {"id": "P06", "name": "Daniel Morris", "age": 39, "employment": "Temp / agency", "housing": "Doubled up / couch-surfing", "education": "HS diploma", "missedAppointments": 1, "zipRisk": "Medium", "priorEviction": true, "dependents": 1, "notes": "Works irregular warehouse shifts and rotates between relatives after a separation; currently paying child support."}, {"id": "P07", "name": "Nadia Rahim", "age": 37, "employment": "Stable full-time", "housing": "Stable lease", "education": "HS diploma", "missedAppointments": 0, "zipRisk": "Low", "priorEviction": false, "dependents": 3, "notes": "Home health aide with regular income, but expects unpaid leave during her daughter's recovery from surgery."}, {"id": "P08", "name": "Michael Cruz", "age": 51, "employment": "Unemployed", "housing": "Stable lease", "education": "HS diploma", "missedAppointments": 0, "zipRisk": "Medium", "priorEviction": false, "dependents": 1, "notes": "Laid off three months ago; severance has ended, but he is current on rent for now through borrowing."}, {"id": "P09", "name": "Casey Morgan", "age": 22, "employment": "Gig work", "housing": "Doubled up / couch-surfing", "education": "Some college", "missedAppointments": 1, "zipRisk": "Low", "priorEviction": false, "dependents": 0, "notes": "Student in a short-term sublet who missed one appointment during exams and sibling caregiving."}, {"id": "P10", "name": "Taylor Bennett", "age": 34, "employment": "Informal / cash work", "housing": "Stable lease", "education": "HS diploma", "missedAppointments": 0, "zipRisk": "Medium", "priorEviction": false, "dependents": 2, "notes": "Supports two children through cleaning work paid in cash. Landlord will not provide formal rent receipts."}, {"id": "P11", "name": "Victor Chen", "age": 58, "employment": "Part-time", "housing": "Stable lease", "education": "BA or above", "missedAppointments": 2, "zipRisk": "Low", "priorEviction": false, "dependents": 0, "notes": "Recent memory lapses are affecting attendance, but he still picks up delivery shifts and has no formal diagnosis."}, {"id": "P12", "name": "Elena Rivera", "age": 41, "employment": "Stable full-time", "housing": "Temporary shelter", "education": "HS diploma", "missedAppointments": 1, "zipRisk": "Medium", "priorEviction": false, "dependents": 2, "notes": "Left housing suddenly after domestic conflict. Employment is stable, but documentation and current address are inconsistent."}];
+    const DEFAULT_SETTINGS = {"employment": {"Stable full-time": 0, "Part-time": 1, "Gig work": 1, "Temp / agency": 1, "Unemployed": 2, "Informal / cash work": 2}, "housing": {"Stable lease": 0, "Doubled up / couch-surfing": 1, "Public housing": 1, "Temporary shelter": 2}, "education": {"BA or above": 0, "Some college": 0, "HS diploma": 1, "No HS diploma": 1}, "missedAppointments": {"0": 0, "1": 1, "2+": 2}, "zipRisk": {"Low": 0, "Medium": 1, "High": 2}, "priorEviction": {"No": 0, "Yes": 3}, "thresholds": {"lowMax": 2, "mediumMax": 5, "fundedSlots": 5}};
+
+    let settings = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+
+    const groups = [
+      ["employment", "employmentControls"],
+      ["housing", "housingControls"],
+      ["education", "educationControls"],
+      ["missedAppointments", "missedControls"],
+      ["zipRisk", "zipControls"],
+      ["priorEviction", "evictionControls"]
+    ];
+
+    function clone(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
+    function createControlRows(groupKey, containerId) {
+      const container = document.getElementById(containerId);
+      const options = settings[groupKey];
+      Object.keys(options).forEach((key) => {
+        const row = document.createElement("div");
+        row.className = "control-row";
+
+        const label = document.createElement("label");
+        label.textContent = key;
+        label.setAttribute("for", `${groupKey}-${key}`);
+
+        const input = document.createElement("input");
+        input.type = "number";
+        input.step = "1";
+        input.min = "0";
+        input.max = "10";
+        input.id = `${groupKey}-${key}`;
+        input.value = options[key];
+        input.addEventListener("input", (e) => {
+          settings[groupKey][key] = Number(e.target.value);
+          render();
+        });
+
+        row.appendChild(label);
+        row.appendChild(input);
+        container.appendChild(row);
+      });
+    }
+
+    function hydrateControls() {
+      groups.forEach(([groupKey, containerId]) => {
+        const container = document.getElementById(containerId);
+        container.querySelectorAll(".control-row").forEach((el) => el.remove());
+        createControlRows(groupKey, containerId);
+      });
+
+      document.getElementById("fundedSlots").value = settings.thresholds.fundedSlots;
+      document.getElementById("lowMax").value = settings.thresholds.lowMax;
+      document.getElementById("mediumMax").value = settings.thresholds.mediumMax;
+    }
+
+    function scoreProfile(profile) {
+      const employmentPts = settings.employment[profile.employment] ?? 0;
+      const housingPts = settings.housing[profile.housing] ?? 0;
+      const educationPts = settings.education[profile.education] ?? 0;
+      const missedKey = profile.missedAppointments >= 2 ? "2+" : String(profile.missedAppointments);
+      const missedPts = settings.missedAppointments[missedKey] ?? 0;
+      const zipPts = settings.zipRisk[profile.zipRisk] ?? 0;
+      const evictionKey = profile.priorEviction ? "Yes" : "No";
+      const evictionPts = settings.priorEviction[evictionKey] ?? 0;
+      const total = employmentPts + housingPts + educationPts + missedPts + zipPts + evictionPts;
+
+      let priority = "High";
+      if (total <= settings.thresholds.lowMax) priority = "Low";
+      else if (total <= settings.thresholds.mediumMax) priority = "Medium";
+
+      return {
+        ...profile,
+        employmentPts,
+        housingPts,
+        educationPts,
+        missedPts,
+        zipPts,
+        evictionPts,
+        score: total,
+        priority
+      };
+    }
+
+    function renderSummary(results) {
+      const funded = results.filter(r => r.decision === "Fund now").length;
+      const high = results.filter(r => r.priority === "High").length;
+      const medium = results.filter(r => r.priority === "Medium").length;
+      const low = results.filter(r => r.priority === "Low").length;
+
+      const stats = [
+        ["Applicants", results.length],
+        ["Funded now", funded],
+        ["Waitlisted", results.length - funded],
+        ["High priority", high],
+        ["Medium priority", medium],
+        ["Low priority", low]
+      ];
+
+      const summary = document.getElementById("summary");
+      summary.innerHTML = "";
+      stats.forEach(([label, value]) => {
+        const div = document.createElement("div");
+        div.className = "stat";
+        div.innerHTML = `<div class="label">${label}</div><div class="value">${value}</div>`;
+        summary.appendChild(div);
+      });
+    }
+
+    function pillClass(value, type) {
+      if (type === "priority") return value.toLowerCase();
+      if (type === "decision") return value === "Fund now" ? "funded" : "waitlist";
+      return "";
+    }
+
+    function renderTable(results) {
+      const tbody = document.getElementById("resultsBody");
+      tbody.innerHTML = "";
+
+      results.forEach((result) => {
+        const tr = document.createElement("tr");
+        tr.className = result.decision === "Fund now" ? "funded-row" : "waitlist-row";
+
+        const inputSummary = `
+          <span class="key"><strong>Employment:</strong> ${result.employment}</span>
+          <span class="key"><strong>Housing:</strong> ${result.housing}</span>
+          <span class="key"><strong>Education:</strong> ${result.education}</span>
+          <span class="key"><strong>Missed appointments:</strong> ${result.missedAppointments}</span>
+          <span class="key"><strong>ZIP code risk level:</strong> ${result.zipRisk}</span>
+          <span class="key"><strong>Prior eviction:</strong> ${result.priorEviction ? "Yes" : "No"}</span>
+          <span class="key"><strong>Dependents:</strong> ${result.dependents}</span>
+        `;
+
+        const breakdown = `
+          Employment ${result.employmentPts}<br>
+          Housing ${result.housingPts}<br>
+          Education ${result.educationPts}<br>
+          Missed appointments ${result.missedPts}<br>
+          ZIP code risk ${result.zipPts}<br>
+          Prior eviction ${result.evictionPts}
+        `;
+
+        tr.innerHTML = `
+          <td><strong>${result.rank}</strong></td>
+          <td><span class="pill ${pillClass(result.decision, "decision")}">${result.decision}</span></td>
+          <td><strong>${result.name}</strong><br><span class="small">${result.id} · age ${result.age}</span></td>
+          <td class="details">${result.notes}</td>
+          <td>${inputSummary}</td>
+          <td><strong>${result.score}</strong></td>
+          <td><span class="pill ${pillClass(result.priority, "priority")}">${result.priority}</span></td>
+          <td class="breakdown">${breakdown}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function computeResults() {
+      const scored = DEFAULT_PROFILES.map((profile, index) => {
+        const scoredProfile = scoreProfile(profile);
+        scoredProfile.originalIndex = index;
+        return scoredProfile;
+      });
+
+      scored.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.originalIndex - b.originalIndex;
+      });
+
+      scored.forEach((item, index) => {
+        item.rank = index + 1;
+        item.decision = index < settings.thresholds.fundedSlots ? "Fund now" : "Waitlist";
+      });
+
+      return scored;
+    }
+
+    function render() {
+      if (settings.thresholds.mediumMax < settings.thresholds.lowMax) {
+        settings.thresholds.mediumMax = settings.thresholds.lowMax;
+        document.getElementById("mediumMax").value = settings.thresholds.mediumMax;
+      }
+      const results = computeResults();
+      renderSummary(results);
+      renderTable(results);
+    }
+
+    document.getElementById("fundedSlots").addEventListener("input", (e) => {
+      settings.thresholds.fundedSlots = Math.max(1, Math.min(DEFAULT_PROFILES.length, Number(e.target.value)));
+      render();
+    });
+
+    document.getElementById("lowMax").addEventListener("input", (e) => {
+      settings.thresholds.lowMax = Math.max(0, Number(e.target.value));
+      render();
+    });
+
+    document.getElementById("mediumMax").addEventListener("input", (e) => {
+      settings.thresholds.mediumMax = Math.max(0, Number(e.target.value));
+      render();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      settings = clone(DEFAULT_SETTINGS);
+      hydrateControls();
+      render();
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(settings, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "prediction-game-settings.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    hydrateControls();
+    render();
+  </script>
+</body>
+</html>
