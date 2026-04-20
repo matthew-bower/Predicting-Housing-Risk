@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prediction Game — Emergency Housing Stabilization Fund</title>
+  <title>Emergency Housing Stabilization Fund — Prediction Model</title>
   <style>
     :root {
       --bg: #f5f7fb;
@@ -213,10 +213,10 @@
     <div class="grid">
       <div class="panel sticky">
         <h2>Model controls</h2>
-        <p class="small">Adjust the weights below. Results update instantly. This is a deliberately simplified model for classroom use.</p>
+        <p class="small">Adjust the weights below. Results update instantly.</p>
 
         <div class="controls-group">
-          <h3>Scarcity settings</h3>
+          <h3>General settings</h3>
           <div class="control-row">
             <label for="fundedSlots">Funded slots</label>
             <input type="number" id="fundedSlots" min="1" max="12" step="1">
@@ -260,7 +260,7 @@
           <button id="downloadBtn">Download current settings</button>
         </div>
 
-        <div class="note">• What happened when high need was translated into ranking under scarcity? Did the model naturalize the idea that some people must lose out? • Did changing the weights solve the problem, or only change who got moved up or down the assistance queue once only a few applicants could be funded?</div>
+        <div class="note">This model is for educational use only.</div>
       </div>
 
       <div class="panel">
@@ -283,7 +283,7 @@
           </table>
         </div>
         <p class="footer">
-          Tie-break rule: if two applicants receive the same score, the tool keeps their original applicant order. That rule is arbitrary by design.
+          Tie-break rule: if two applicants receive the same score, the tool keeps their original applicant order.
         </p>
       </div>
     </div>
